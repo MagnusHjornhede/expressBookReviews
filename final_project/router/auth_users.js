@@ -31,6 +31,10 @@ const authenticatedUser = (username, password) => { //returns boolean
 
 }
 
+regd_users.get("/dump", (req, res) => {
+    res.send(JSON.stringify({ books }, null, 4));
+  });
+
 //only registered users can login
 regd_users.post("/login", (req, res) => {
   
