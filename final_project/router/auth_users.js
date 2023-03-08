@@ -39,6 +39,7 @@ regd_users.get("/dump", (req, res) => {
 });
 
 //only registered users can login
+/*
 regd_users.post("/login", (req, res) => {
     const { username, password } = req.body;
 
@@ -54,32 +55,25 @@ regd_users.post("/login", (req, res) => {
         data: user
     }, 'accessToken', { expiresIn: 60 * 60 });
     res.json({ accessToken });
-    /*
-     const user = req.body.user;
-     if (!user) {
-         return res.status(404).json({message: "Body Empty"});
-     }
-     let accessToken = jwt.sign({
-         data: user
-       }, 'access', { expiresIn: 60 * 60 });
-       req.session.authorization = {
-         accessToken
-     }
-     return res.status(200).send("User successfully logged in");
-  
-  
-     /*
-   const { username, password } = req.body;
-   if (!authenticatedUser(username, password)) {
-     // Return 401 Unauthorized status if the user is not authenticated
-     return res.status(401).json({ message: "Invalid credentials" });
-   }
  
-   const user = { username: username };
-   const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-   // Return the JWT token as a JSON response
-   res.json({ accessToken: accessToken });
- */
+});*/
+regd_users.post("/login", (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ message: "Missing username or password" });
+    }
+
+    const user = authenticatedUser(username, password);
+
+    if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    let accessToken = jwt.sign({
+        data: user
+    }, 'accessToken', { expiresIn: 60 * 60 });
+    res.json({ accessToken });
 });
 
 // Add a book review
