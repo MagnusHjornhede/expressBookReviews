@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 let books = require("./booksdb.js");
 const regd_users = express.Router();
 
-let users = [];
+let users = [{ "username": "22", "password": "22" }];
 
 const isValid = (username) => {
     //Check is the username is valid
@@ -33,30 +33,11 @@ const authenticatedUser = (username, password) => { //returns boolean
 
 regd_users.get("/dump", (req, res) => {
     if (authenticatedUser) {
-        return res.send(JSON.stringify({ users }, null, 4));
+        return res.send({ users });
     }
     return res.status(400).json({ message: "Missing username or password" });
 });
 
-//only registered users can login
-/*
-regd_users.post("/login", (req, res) => {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ message: "Missing username or password" });
-    }
-
-    if (!authenticatedUser(username, password)) {
-        return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    let accessToken = jwt.sign({
-        data: user
-    }, 'accessToken', { expiresIn: 60 * 60 });
-    res.json({ accessToken });
- 
-});*/
 regd_users.post("/login", (req, res) => {
     const { username, password } = req.body;
 
@@ -73,16 +54,24 @@ regd_users.post("/login", (req, res) => {
     let accessToken = jwt.sign({
         data: user
     }, 'accessToken', { expiresIn: 60 * 60 });
-    res.json({ accessToken });
+
+    req.session.authorization = {
+        accessToken
+    }
+    // res.json({ accessToken });
+    return res.status(200).send("User successfully logged in");
 });
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    const { isbn } = req.params;  // req.params.isbn ?
-    const { rating, comment } = req.body;
+    const { isbn } = req.params;
+    const { comment } = req.body;
+
+    //const isbn = req.params.isbn;
+    const book = books[isbn];
 
     // Find the book with the given ISBN
-    const book = books.find((book) => book.isbn === isbn);
+    //const book = Object.values(books).find((book) => book.isbn === isbn);
 
     // Return a 404 Not Found status if the book is not found
     if (!book) {
@@ -90,7 +79,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     }
 
     // Create a new review object
-    const review = { rating: rating, comment: comment };
+    const review = { comment: comment };
 
     // Add the review to the book's reviews array
     book.reviews.push(review);
