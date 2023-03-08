@@ -12,6 +12,7 @@ app.use("/customer", session({ secret: "fingerprint_customer", resave: true, sav
 
 app.use("/customer/auth/*", function auth(req, res, next) {
     // Middleware which tells that the user is authenticated or not
+    /*
     if (req.session.authorization) {
         let token = req.session.authorization['accessToken']; // Access Token
         jwt.verify(token, "access", (err, user) => {
@@ -25,13 +26,13 @@ app.use("/customer/auth/*", function auth(req, res, next) {
         });
     } else {
         return res.status(403).json({ message: "User not logged in" })
-    }
+    }*/
 
-    /*
+    
      const token = req.headers.authorization?.split(" ")[1];
      // Check for token
      if (!token) {
-       return res.status(401).json({ message: "Authentication failed. Token not provided." });
+      // return res.status(401).json({ message: "Authentication failed. Token not provided." });
      }
      
      try {
@@ -47,7 +48,7 @@ app.use("/customer/auth/*", function auth(req, res, next) {
        next();
      } catch (error) {
        return res.status(401).json({ message: "Authentication failed. Invalid token." });
-     }*/
+     }
 });
 
 const PORT = 5000;
