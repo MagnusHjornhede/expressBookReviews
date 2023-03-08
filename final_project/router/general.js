@@ -21,7 +21,7 @@ public_users.post("/register", (req, res) => {
     // Create a new user object
     const newUser = { id: users.length + 1, username, password };
     users.push(newUser);
-  
+    
     // Return the new user object
     return res.status(201).json({ user: newUser });
 });
@@ -62,26 +62,28 @@ public_users.get('/isbn/:isbn', function (req, res) {
   }
 });
 
-const getByISBN=async(isbn)=>{
-  try{
-    const getISBN=await Promise.resolve(isbn);
-    if(getISBN){
-      return Promise.resolve(isbn)
+const getByISBN = async (isbn) => {
+    try {
+      const book = books.find((book) => book.isbn === isbn);
+      if (book) {
+        return Promise.resolve(book);
+      } else {
+        return Promise.reject(new Error("Book with the ISBN not found!"));
+      }
+    } catch (error) {
+      console.log(error);
     }
-    else{
-      return Promise.reject(new error("Book with the isbn not found!"));
-    }
-  }
-  catch(error){
-    console.log(error);
-  }
-}
+  };
 
-public_users.get('/isbn/:isbn', async (req, res) => {
-  const isbn = req.params.isbn;
-  const returnedIsbn = await getByISBN(isbn);
-  res.send(books[returnedIsbn]);
-})
+  public_users.get('/isbn/:isbn', async (req, res) => {
+    const isbn = req.params.isbn;
+    try {
+      const book = await getByISBN(isbn);
+      res.json(book);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  });
 
 /************* */
 // Get book details based on author
