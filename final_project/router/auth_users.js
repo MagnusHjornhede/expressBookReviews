@@ -52,11 +52,11 @@ regd_users.post("/login", (req, res) => {
     }
 
     let accessToken = jwt.sign({
-        data: user
-    }, 'accessToken', { expiresIn: 60 * 60 });
+        data:user
+    }, 'access', { expiresIn: 60 * 60 });
 
     req.session.authorization = {
-        accessToken
+        accessToken     // have to be same aslet token = req.session.authorization['accessToken']; 
     }
     // res.json({ accessToken });
     return res.status(200).send("User successfully logged in");
