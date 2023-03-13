@@ -21,6 +21,8 @@ public_users.post("/register", (req, res) => {
     // Create a new user object
     const newUser = { username, password };
     users.push(newUser);
+  // users.push({"username":username,"password":password});
+
     
     // Return the new user object
     return res.status(201).json({ user: newUser });
