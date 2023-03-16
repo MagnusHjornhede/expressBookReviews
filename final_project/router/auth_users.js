@@ -3,21 +3,6 @@ const jwt = require('jsonwebtoken');
 let books = require("./booksdb.js");
 const regd_users = express.Router();
 
-let books2 = {
-    1: {"author": "Chinua Achebe","title": "Things Fall Apart", "reviews": "Just made a review for testing" },
-    2: {"author": "Hans Christian Andersen","title": "Fairy tales", "reviews": {} },
-    3: {"author": "Dante Alighieri","title": "The Divine Comedy", "reviews": {} },
-    4: {"author": "Unknown","title": "The Epic Of Gilgamesh", "reviews": {} },
-    5: {"author": "Unknown","title": "The Book Of Job", "reviews": {} },
-    6: {"author": "Unknown","title": "One Thousand and One Nights", "reviews": {} },
-    7: {"author": "Unknown","title": "Nj\u00e1l's Saga", "reviews": {} },
-    8: {"author": "Jane Austen","title": "Pride and Prejudice", "reviews": {} },
-    9: {"author": "Honor\u00e9 de Balzac","title": "Le P\u00e8re Goriot", "reviews": {} },
-    10: {"author": "Samuel Beckett","title": "Molloy, Malone Dies, The Unnamable, the trilogy", "reviews": {} }
-}
-
-let users = [{ "username": "22", "password": "22" }];
-
 const isValid = (username) => {
     //Check is the username is valid
     let userswithsamename = users.filter((user) => {
@@ -53,7 +38,6 @@ regd_users.get("/dump", (req, res) => {
 
 regd_users.post("/login", (req,res) => {
   //Write your code here
-  //const username = req.body.username;
   const username = req.body.username;
   const password = req.body.password;
 
@@ -151,7 +135,7 @@ regd_users.put("/auth/review/:isbn",async (req, res) => {
               book["reviews"] = review
               books[isbn] = await book;
           }
-          res.send('The review for the book with ISBN  ${isbn} has been added/updated.');
+          res.send(`The review for the book with ISBN  ${isbn} has been added/updated.`);
       }  else{
           res.send("Book not found");
       }
